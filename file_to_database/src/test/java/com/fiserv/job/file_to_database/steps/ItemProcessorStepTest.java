@@ -1,6 +1,7 @@
 package com.fiserv.job.file_to_database.steps;
 
 import com.fiserv.job.file_to_database.entities.Person;
+import com.fiserv.job.file_to_database.utils.HandlerException;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ItemProcessorStepTest {
     // The method updates the "createdAt" field of the given Person object with the current date and time.
     @Test
-    public void test_updateCreatedAtField() {
+    public void test_updateCreatedAtField() throws HandlerException {
         Person person = createPerson();
 
         Person updatedPerson = new ItemProcessorStep().process(person);
@@ -26,7 +27,7 @@ public class ItemProcessorStepTest {
 
     // The method returns the updated Person object.
     @Test
-    public void test_returnUpdatedPersonObject() {
+    public void test_returnUpdatedPersonObject() throws HandlerException {
         Person person = createPerson();
 
         Person updatedPerson = new ItemProcessorStep().process(person);
@@ -37,7 +38,7 @@ public class ItemProcessorStepTest {
 
     // The method uses the DateTimeFormatter to format the current date and time.
     @Test
-    public void test_useDateTimeFormatter() {
+    public void test_useDateTimeFormatter() throws HandlerException {
         Person person = createPerson();
 
         Person updatedPerson = new ItemProcessorStep().process(person);
@@ -58,7 +59,7 @@ public class ItemProcessorStepTest {
 
     // The method receives a Person object with a null "createdAt" field and updates it with the current date and time.
     @Test
-    public void test_receivePersonWithNullCreatedAtField() {
+    public void test_receivePersonWithNullCreatedAtField() throws HandlerException {
         Person person = createPerson();
         person.setCreateAt(null);
 
@@ -70,7 +71,7 @@ public class ItemProcessorStepTest {
 
     // The method receives a Person object with a non-null "createdAt" field and updates it with the current date and time.
     @Test
-    public void test_receivePersonWithNonNullCreatedAtField() {
+    public void test_receivePersonWithNonNullCreatedAtField() throws HandlerException {
         Person person = createPerson();
         person.setCreateAt("2021-01-01 00:00:00");
 

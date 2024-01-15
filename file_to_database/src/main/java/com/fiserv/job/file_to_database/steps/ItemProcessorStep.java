@@ -1,6 +1,7 @@
 package com.fiserv.job.file_to_database.steps;
 
 import com.fiserv.job.file_to_database.entities.Person;
+import com.fiserv.job.file_to_database.utils.HandlerException;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,13 @@ public class ItemProcessorStep implements ItemProcessor<Person,Person> {
      * @return         the updated person object
      */
     @Override
-    public Person process(Person person){
+    public Person process(Person person) throws HandlerException {
+
+        //The above is an example to make the batch process fail.
+        /*if (person.getName().matches("Nicole")){
+            throw new HandlerException("Error");
+        }*/
+
         person.setCreateAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
 
         return person;

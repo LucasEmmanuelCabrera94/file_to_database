@@ -1,20 +1,23 @@
 package com.fiserv.job.file_to_database.configurations;
 
 import com.fiserv.job.file_to_database.entities.Person;
-import com.fiserv.job.file_to_database.listeners.ChunkListenerImpl;
+import com.fiserv.job.file_to_database.listeners.*;
 import com.fiserv.job.file_to_database.steps.ItemProcessorStep;
 import com.fiserv.job.file_to_database.steps.ItemReaderStep;
 import com.fiserv.job.file_to_database.steps.ItemWriterStep;
+import com.fiserv.job.file_to_database.utils.SkipPolicyImpl;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.retry.policy.RetryContextCache;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.validation.BindException;
@@ -28,18 +31,30 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public ItemProcessorStep itemProcessorStep(){
+    public ItemProcessor<? super Person, ? extends Person> itemProcessorStep(){
         return new ItemProcessorStep();
     }
 
     @Bean
-    public ItemWriterStep itemWriterStep(){
+    public ItemWriter<? super Person> itemWriterStep(){
         return new ItemWriterStep();
     }
 
+
     @Bean
-    public ChunkListenerImpl chunkListener(){
-        return new ChunkListenerImpl();
+    public StepExecutionListenerImpl stepExecutionListener(){
+        return new StepExecutionListenerImpl();
+    }
+
+
+    @Bean
+    public SkipPolicyImpl skipPolicy(){
+        return new SkipPolicyImpl();
+    }
+
+    @Bean
+    public ItemProcessListenerImpl ItemProcessListener(){
+        return new ItemProcessListenerImpl();
     }
 
     /**
@@ -69,12 +84,23 @@ public class BatchConfiguration {
                 .<Person, Person> chunk(2, transactionManager)
                 .taskExecutor(taskExecutor())
                 .reader(itemReaderStep())
+                .listener(ItemProcessListener())
                 .processor(itemProcessorStep())
                 .writer(itemWriterStep())
-                .listener(chunkListener())
+                .listener(stepExecutionListener())
+                .faultTolerant()
+                .retryLimit(3)
+                .retry(RuntimeException.class)
+                .skipPolicy(skipPolicy())
                 .build();
     }
 
+
+    /**
+     * Creates and configures a task executor bean.
+     *
+     * @return          The configured task executor bean.
+     */
     @Bean
     public TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

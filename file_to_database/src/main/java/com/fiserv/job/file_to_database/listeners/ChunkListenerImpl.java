@@ -13,7 +13,7 @@ public class ChunkListenerImpl implements ChunkListener {
      */
     @Override
     public void afterChunk(ChunkContext context) {
-        System.out.println("After chunk processing...");
+        System.out.println("After chunk listener...");
         if (isBatchStatusFailed(context)) {
             System.out.println("FINALIZO EL STATUS COMPLETE...");
         }
