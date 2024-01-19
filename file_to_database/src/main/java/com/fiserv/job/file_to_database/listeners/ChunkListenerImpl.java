@@ -39,7 +39,7 @@ public class ChunkListenerImpl implements ChunkListener {
      * Checks if the batch status of the given ChunkContext is failed.
      *
      * @param  context  the ChunkContext object to check the batch status of
-     * @return          true if the batch status is failed, false otherwise
+     * @return true if the batch status is failed, false otherwise
      */
     private boolean isBatchStatusFailed(ChunkContext context) {
         return context.getStepContext().getStepExecution().getStatus() == BatchStatus.FAILED;

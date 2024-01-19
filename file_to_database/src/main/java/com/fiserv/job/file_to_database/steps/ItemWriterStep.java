@@ -16,8 +16,7 @@ public class ItemWriterStep implements ItemWriter<Person>{
     /**
      * Writes the given chunk of data to the destination.
      *
-     * @param  chunk  the chunk of data to be written
-     * @throws Exception  if an error occurs during the write operation
+     * @param chunk the chunk of data to be written
      */
     @Override
     public void write(Chunk<? extends Person> chunk) {

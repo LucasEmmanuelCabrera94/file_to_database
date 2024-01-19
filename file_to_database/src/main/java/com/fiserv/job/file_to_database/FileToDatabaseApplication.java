@@ -22,7 +22,7 @@ public class FileToDatabaseApplication {
 	private Job job;
 
 	/**
-	 * Main method to run the RetrievingFromBdApplication.
+	 * Main method to run the FileToDatabaseApplication.
 	 *
 	 * @param args The command line arguments.
 	 */
@@ -41,7 +41,8 @@ public class FileToDatabaseApplication {
 			jobLauncher.run(job, jobParameters);
 
 		} catch (Exception e) {
-			log.error("Error al iniciar el proceso Batch, Error {}", e.getMessage());
+			String errorMessage = String.format("Error starting the Batch process, Error %s", e.getMessage());
+			log.error(errorMessage);
 			throw new RuntimeException(e);
 		}
 	}
@@ -53,7 +54,7 @@ public class FileToDatabaseApplication {
 	 */
 	private JobParameters createJobParameters() {
 		return new JobParametersBuilder()
-				.addString("name", "chunk")
+				.addString("name", "fileToDatabase")
 				.addLong("id", System.currentTimeMillis())
 				.addDate("date", new Date())
 				.toJobParameters();

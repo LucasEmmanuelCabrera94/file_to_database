@@ -3,6 +3,7 @@ package com.fiserv.job.file_to_database.steps;
 import com.fiserv.job.file_to_database.entities.Person;
 import com.fiserv.job.file_to_database.utils.HandlerException;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for ItemProcessorStep class")
 public class ItemProcessorStepTest {
-    // The method updates the "createdAt" field of the given Person object with the current date and time.
+    @DisplayName("The 'createdAt' Field Should Not Be Null After Update")
     @Test
     public void test_updateCreatedAtField() throws HandlerException {
         Person person = createPerson();
@@ -25,7 +27,7 @@ public class ItemProcessorStepTest {
         assertNotNull(updatedPerson.getCreateAt());
     }
 
-    // The method returns the updated Person object.
+    @DisplayName("The test creates a Person object, passes it to the process method, and asserts that the returned updatedPerson object is equal to the original person object.")
     @Test
     public void test_returnUpdatedPersonObject() throws HandlerException {
         Person person = createPerson();
@@ -36,8 +38,8 @@ public class ItemProcessorStepTest {
         assertEquals(person, updatedPerson);
     }
 
-    // The method uses the DateTimeFormatter to format the current date and time.
     @Test
+    @DisplayName("It tests the process method of the ItemProcessorStep class by passing a Person object and asserting that the createAt field of the updated person is not null and matches a specific date-time format.")
     public void test_useDateTimeFormatter() throws HandlerException {
         Person person = createPerson();
 
@@ -48,8 +50,8 @@ public class ItemProcessorStepTest {
         assertTrue(updatedPerson.getCreateAt().matches("\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}:\\d{2}"));
     }
 
-    // The method receives a null Person object and returns null.
     @Test
+    @DisplayName("It uses the assertThrows method to assert that a NullPointerException is thrown when calling process with a null Person object.")
     public void test_receiveNullPersonObject() {
         Person person = null;
 
@@ -57,8 +59,8 @@ public class ItemProcessorStepTest {
         assertThrows(NullPointerException.class, () -> new ItemProcessorStep().process(person));
     }
 
-    // The method receives a Person object with a null "createdAt" field and updates it with the current date and time.
     @Test
+    @DisplayName("The test asserts that the createdAt field of the returned Person object is not null.")
     public void test_receivePersonWithNullCreatedAtField() throws HandlerException {
         Person person = createPerson();
         person.setCreateAt(null);
@@ -69,8 +71,8 @@ public class ItemProcessorStepTest {
         assertNotNull(updatedPerson.getCreateAt());
     }
 
-    // The method receives a Person object with a non-null "createdAt" field and updates it with the current date and time.
     @Test
+    @DisplayName("The test asserts that the createdAt field of the returned Person object is not equal to the original createdAt field.")
     public void test_receivePersonWithNonNullCreatedAtField() throws HandlerException {
         Person person = createPerson();
         person.setCreateAt("2021-01-01 00:00:00");
@@ -83,6 +85,10 @@ public class ItemProcessorStepTest {
     }
 
     private static Person createPerson() {
-        return new Person("nameTest","lastNameTest",123);
+        return Person.builder()
+                .name("nameTest")
+                .lastName("lastNameTest")
+                .dni(123)
+                .build();
     }
 }

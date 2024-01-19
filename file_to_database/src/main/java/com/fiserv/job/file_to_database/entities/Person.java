@@ -1,7 +1,10 @@
 package com.fiserv.job.file_to_database.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +15,9 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name= "person")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +30,5 @@ public class Person implements Serializable {
 
     private String createAt;
 
-    public Person(String name, String lastName, int dni) {
-        this.name = name;
-        this.lastName = lastName;
-        this.dni = dni;
-    }
-
-    public Person() {
-    }
 }
 

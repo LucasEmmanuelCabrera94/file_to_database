@@ -17,9 +17,9 @@ public class StepExecutionListenerImpl implements StepExecutionListener {
      */
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
-
         if (stepExecution.getStatus() == BatchStatus.FAILED) {
-            System.out.println("The step has failed. Failure message: " + stepExecution.getFailureExceptions().toString());
+            String failureMessage = "The step has failed. Failure message: " + stepExecution.getFailureExceptions().toString();
+            System.out.println(failureMessage);
         }
 
         return stepExecution.getExitStatus();

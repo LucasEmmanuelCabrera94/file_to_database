@@ -26,7 +26,7 @@ import org.springframework.validation.BindException;
 public class BatchConfiguration {
 
     @Bean(name = "PersonItemReader")
-    public ItemReaderStep itemReaderStep() throws BindException {
+    public ItemReaderStep itemReaderStep() {
         return new ItemReaderStep();
     }
 
@@ -79,8 +79,8 @@ public class BatchConfiguration {
      * @return                      the Step object for the jobStep
      */
     @Bean
-    protected Step jobStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws BindException {
-        return new StepBuilder("readFile", jobRepository)
+    protected Step jobStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("step-file_to_database", jobRepository)
                 .<Person, Person> chunk(2, transactionManager)
                 .taskExecutor(taskExecutor())
                 .reader(itemReaderStep())
@@ -99,7 +99,7 @@ public class BatchConfiguration {
     /**
      * Creates and configures a task executor bean.
      *
-     * @return          The configured task executor bean.
+     * @return The configured task executor bean.
      */
     @Bean
     public TaskExecutor taskExecutor() {

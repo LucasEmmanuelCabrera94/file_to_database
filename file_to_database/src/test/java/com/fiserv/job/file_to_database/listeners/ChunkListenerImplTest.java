@@ -2,6 +2,7 @@ package com.fiserv.job.file_to_database.listeners;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -10,8 +11,10 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
+@DisplayName("Tests for ChunkListenerImpl class")
 public class ChunkListenerImplTest {
 
     @Mock
@@ -26,10 +29,6 @@ public class ChunkListenerImplTest {
     @InjectMocks
     private ChunkListenerImpl chunkListener;
 
-    /**
-     * Set up the test environment before each test case.
-     *
-     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -38,37 +37,37 @@ public class ChunkListenerImplTest {
         when(mockStepContext.getStepExecution()).thenReturn(mockStepExecution);
     }
 
-    /**
-     * A description of the entire Java function.
-     *
-     */
     @Test
+    @DisplayName("After Chunk: Batch Status Failed")
     public void testAfterChunkBatchStatusFailed() {
         when(mockStepExecution.getStatus()).thenReturn(BatchStatus.FAILED);
 
         chunkListener.afterChunk(mockChunkContext);
+
+        verify(mockStepExecution, times(1)).getStatus();
+
     }
 
-    /**
-     * Test the behavior of the `afterChunk` method when the batch status is not failed.
-     *
-     */
     @Test
+    @DisplayName("After Chunk: Batch Status is Completed")
     public void testAfterChunkBatchStatusNotFailed() {
         when(mockStepExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
 
         chunkListener.afterChunk(mockChunkContext);
+
+        verify(mockStepExecution, times(1)).getStatus();
+
     }
 
-    /**
-     * Test case for the method `afterChunkError` in the class `ChunkListener`.
-     *
-     */
     @Test
+    @DisplayName("After Chunk with Error")
     public void testAfterChunkError() {
         Exception testException = new RuntimeException("Test exception");
         when(mockChunkContext.getAttribute("sb_rollback_exception")).thenReturn(testException);
 
         chunkListener.afterChunkError(mockChunkContext);
+
+        verify(mockChunkContext, times(1)).getAttribute("sb_rollback_exception");
+
     }
 }
